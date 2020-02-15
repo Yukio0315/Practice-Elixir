@@ -13,7 +13,7 @@ defmodule MyList do
   # defp _sum([], total), do: total
   # defp _sum([head | total], total), do: _sum(total, head + total)
   def sum([head | []]), do: head
-  def sum([head | [head1 | tail]]), do: sum([head + head1 | tail])
+  def sum([head, head1 | tail]), do: sum([head + head1 | tail])
   def sum([head | tail]), do: head + tail
   def reduce([], value, _), do: value
   def reduce([head | tail], value, func), do: reduce(tail, func.(head, value), func)
@@ -21,11 +21,21 @@ defmodule MyList do
   defp _mapsum([], _func, total), do: total
   defp _mapsum([head | tail], func, total), do: _mapsum(tail, func, total + func.(head))
   def max([head | []]), do: head
-  def max([head | [head1 | tail]]) when head < head1, do: max([head1 | tail])
-  def max([head | [head1 | tail]]) when head > head1, do: max([head | tail])
+  def max([head, head1 | tail]) when head < head1, do: max([head1 | tail])
+  def max([head, head1 | tail]) when head > head1, do: max([head | tail])
   def max([head | tail]) when head > tail, do: max([head | []])
   def max([head | tail]) when head < tail, do: max([tail | []])
   def caesar([], _num), do: []
   def caesar([head | tail], num) when head + num > 122, do: [head + num - 26 | caesar(tail, num)]
   def caesar([head | tail], num) when head + num < 122, do: [head + num | caesar(tail, num)]
+  def span(list, from, to), do: _span(list, from, to, [])
+  defp _span([], _, _, result), do: result
+
+  defp _span([head | tail], from, to, []) when head >= from and head <= to,
+    do: _span(tail, from, to, [head])
+
+  defp _span([head | tail], from, to, result) when head >= from and head <= to,
+    do: _span(tail, from, to, result ++ [head])
+
+  defp _span([_ | tail], from, to, result), do: _span(tail, from, to, result)
 end
