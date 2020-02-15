@@ -33,13 +33,12 @@ defmodule MyList do
     do: [head + num - @num_of_alpha | caesar(tail, num)]
 
   def caesar([head | tail], num) when head + num < @z_number, do: [head + num | caesar(tail, num)]
-  def span(list, from, to), do: _span(list, from, to, [])
-  defp _span([], _, _, result), do: result
+  def span(from = [head | _], to) when length(from) + head - 1 >= to, do: from
+  def span(from, to) when is_list(from) === false, do: span([from], to)
 
-  defp _span([head | tail], from, to, result) when head >= from and head <= to,
-    do: _span(tail, from, to, result ++ [head])
+  def span(from = [head | _], to) when length(from) + head - 1 < to,
+    do: span(from ++ [List.last(from) + 1], to)
 
-  defp _span([_ | tail], from, to, result), do: _span(tail, from, to, result)
   def all?(list, func), do: _all?(list, func, true)
   defp _all?([], _, result) when result === true, do: true
   defp _all?([head | tail], func, result) when result === true, do: _all?(tail, func, func.(head))
@@ -88,4 +87,13 @@ defmodule MyList do
 
   defp _flatten([head | tail], tail2, result) when is_list(head) === false,
     do: _flatten(tail, tail2, result ++ [head])
+
+  def get_prime(n) do
+    span(2, n) --
+      for x <- span(2, n - 1),
+          y <- span(3, n),
+          x < y,
+          rem(y, x) === 0,
+          do: y
+  end
 end
