@@ -40,4 +40,52 @@ defmodule MyList do
     do: _span(tail, from, to, result ++ [head])
 
   defp _span([_ | tail], from, to, result), do: _span(tail, from, to, result)
+  def all?(list, func), do: _all?(list, func, true)
+  defp _all?([], _, result) when result === true, do: true
+  defp _all?([head | tail], func, result) when result === true, do: _all?(tail, func, func.(head))
+  defp _all?(_, _, false), do: false
+
+  def each([], _), do: :ok
+
+  def each([head | tail], func) do
+    func.(head)
+    each(tail, func)
+  end
+
+  def filter(list, func), do: _filter(list, func, [])
+  defp _filter([], _, result), do: result
+
+  defp _filter([head | tail], func, result) do
+    if func.(head) do
+      _filter(tail, func, result ++ [head])
+    else
+      _filter(tail, func, result)
+    end
+  end
+
+  def split(list, num), do: _split(list, num, {[], []})
+  defp _split([], _, result), do: result
+
+  defp _split([head | tail], num, {result1, result2}) when length(result1) < num,
+    do: _split(tail, num, {result1 ++ [head], result2})
+
+  defp _split([head | tail], num, {result1, result2}) when length(result1) >= num,
+    do: _split(tail, num, {result1, result2 ++ [head]})
+
+  def take(list, num), do: _take(list, num, [])
+  defp _take([], _, result), do: result
+
+  defp _take([head | tail], num, result) when length(result) < num,
+    do: _take(tail, num, result ++ [head])
+
+  defp _take(_, _, result), do: result
+
+  def flatten(list), do: _flatten(list, [], [])
+  defp _flatten([], [], result), do: result
+  defp _flatten([], tail, result), do: _flatten(tail, [], result)
+  defp _flatten([head | tail], [], result) when is_list(head), do: _flatten(head, tail, result)
+  defp _flatten([head], tail, result) when is_list(head), do: _flatten(head, tail, result)
+
+  defp _flatten([head | tail], tail2, result) when is_list(head) === false,
+    do: _flatten(tail, tail2, result ++ [head])
 end
