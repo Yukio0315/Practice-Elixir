@@ -1,4 +1,6 @@
 defmodule MyList do
+  @z_number 122
+  @num_of_alpha 26
   def len([]), do: 0
   def len([_head | tail]), do: 1 + len(tail)
   def square([]), do: []
@@ -26,13 +28,13 @@ defmodule MyList do
   def max([head | tail]) when head > tail, do: max([head | []])
   def max([head | tail]) when head < tail, do: max([tail | []])
   def caesar([], _num), do: []
-  def caesar([head | tail], num) when head + num > 122, do: [head + num - 26 | caesar(tail, num)]
-  def caesar([head | tail], num) when head + num < 122, do: [head + num | caesar(tail, num)]
+
+  def caesar([head | tail], num) when head + num > @z_number,
+    do: [head + num - @num_of_alpha | caesar(tail, num)]
+
+  def caesar([head | tail], num) when head + num < @z_number, do: [head + num | caesar(tail, num)]
   def span(list, from, to), do: _span(list, from, to, [])
   defp _span([], _, _, result), do: result
-
-  defp _span([head | tail], from, to, []) when head >= from and head <= to,
-    do: _span(tail, from, to, [head])
 
   defp _span([head | tail], from, to, result) when head >= from and head <= to,
     do: _span(tail, from, to, result ++ [head])
