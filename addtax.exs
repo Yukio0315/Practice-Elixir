@@ -12,7 +12,7 @@ defmodule AddTax do
   #   [id: 130, ship_to: :NC, net_amount: 50.00]
   # ]
 
-  def addTax(tax_rates, orders) do
+  def add_tax(tax_rates, orders) do
     for {key, tax} <- tax_rates,
         order = [_, ship_to: country, net_amount: price] <- orders do
       if key === country do
