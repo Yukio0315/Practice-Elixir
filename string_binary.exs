@@ -20,7 +20,13 @@ defmodule StringAndBinaries do
   def center(list) do
     max = _calc_max_length(list, 0)
 
-    Enum.each(list, fn word -> IO.puts(_padding(word, max)) end)
+    Enum.each(list, fn word ->
+      IO.puts(
+        word
+        |> String.pad_leading(div(max - String.length(word), 2) + String.length(word))
+        |> String.pad_trailing(max)
+      )
+    end)
   end
 
   defp _calc_max_length([], max_length), do: max_length
@@ -33,9 +39,28 @@ defmodule StringAndBinaries do
     end
   end
 
-  defp _padding(string, max) do
-    string
-    |> String.pad_leading(div(max - String.length(string), 2) + String.length(string))
-    |> String.pad_trailing(max)
+  def capitalize_sentences(sentence) do
+    sentence
+    |> String.split(". ")
+    |> Enum.map(&String.capitalize(&1))
+    |> Enum.join(". ")
+  end
+
+  def file_parse do
+    {:ok, file} = File.open("sales_info", fn file -> IO.read(file, :all) end)
+    [head | tail] = String.split(file, "\n")
+
+    Enum.map(tail, fn line ->
+      [id, ship_to, net_amount] = String.split(line, ",")
+
+      Enum.zip(
+        Enum.map(String.split(head, ","), fn key -> String.to_atom(key) end),
+        [
+          String.to_integer(id),
+          String.to_atom(String.trim_leading(ship_to, ":")),
+          String.to_float(net_amount)
+        ]
+      )
+    end)
   end
 end
