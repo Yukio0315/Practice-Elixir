@@ -9,13 +9,8 @@ defmodule StringAndBinaries do
 
   defp _is_printable(_, _), do: false
 
-  def anagram?(word1, word2) do
-    if word1 -- word2 === [] do
-      true
-    else
-      false
-    end
-  end
+  def anagram?(word1, word2),
+    do: if(word1 -- word2 === [] and length(word1) === length(word2), do: true, else: false)
 
   def center(list) do
     max = _calc_max_length(list, 0)
@@ -47,8 +42,9 @@ defmodule StringAndBinaries do
   end
 
   def file_parse do
-    {:ok, file} = File.open("sales_info", fn file -> IO.read(file, :all) end)
-    [head | tail] = String.split(file, "\n")
+    [head | tail] =
+      File.open!("sales_info", fn file -> IO.read(file, :all) end)
+      |> String.split("\n")
 
     Enum.map(tail, fn line ->
       [id, ship_to, net_amount] = String.split(line, ",")
