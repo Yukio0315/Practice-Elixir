@@ -1,13 +1,6 @@
 use Mix.Config
 
-# Configure your database
-config :hello, Hello.Repo,
-  username: "username",
-  password: "password",
-  database: "hello_dev",
-  hostname: "localhost",
-  show_sensitive_data_on_connection_error: true,
-  pool_size: 10
+import_config "dev.secret.exs"
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
